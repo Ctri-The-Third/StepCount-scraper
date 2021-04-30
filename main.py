@@ -30,11 +30,11 @@ def getLeaderBoard():
     print(len(r.content))
     content = r.content.decode('UTF-8')
     leaderBoard = []
-    soup = BeautifulSoup(content,'html.parser',multi_valued_attributes=None)
+    soup = BeautifulSoup(content,'html.parser')
 
     lbl = soup.find_all(name='div',class_=re.compile("lead_bd(?![0-9])"))
     for tag in lbl:
-        entry = BeautifulSoup(str(tag),'html.parser',multi_valued_attributes=None)
+        entry = BeautifulSoup(str(tag),'html.parser')
         
 
         rawName = entry.find(name="span", class_="lb_name").text
