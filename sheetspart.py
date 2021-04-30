@@ -57,7 +57,7 @@ def main(scoreBoard):
     
     result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
                                     range=newRange,
-                                    valueInputOption="RAW", body=body).execute()
+                                    valueInputOption="USER_ENTERED", body=body).execute()
 
 def getToken(tokenName = "sheets"):
   creds = None
