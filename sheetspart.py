@@ -51,7 +51,7 @@ def main(scoreBoard):
         startRow = len(values)+1
     
 
-    newRange = "A%s:C%s" % (startRow,startRow+len(rows))
+    newRange = "Raw!A%s:C%s" % (startRow,startRow+len(rows))
     
     body = {"values":newObj}
     
