@@ -40,11 +40,12 @@ def getLeaderBoard():
         rawName = entry.find(name="span", class_="lb_name").text
         if rawName[-16:] == "Unity | Game Ops":
             rawName = rawName[0:-16]
-        
+            rawName = re.sub(r" \([0-9]*.{2}\)","",rawName)
 
         rawSteps = entry.find(name="div", class_="lead_bd3").text
         if rawSteps[-6:] == " Steps":
-            rawSteps = rawSteps[0:-6]
+            
+            rawSteps = re.sub(r"[^0-9]","",rawSteps)
             int(rawSteps)
         
 
