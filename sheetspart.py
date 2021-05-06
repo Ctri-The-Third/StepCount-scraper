@@ -9,32 +9,45 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
+import logging
 import pickle
+import re 
+import json
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = '1kJaivNZ3NrtIfLcRV8-KjzGSBRsT9v9ThcnY_7H12DY'
-SAMPLE_RANGE_NAME = 'Raw!A:A'
+sheetsConfig = {"sheetID": "", "hourlyRange":"","dailyRange":"","slackRange":""}
 
-
-def getLatestRow():
+def getLatestRow(sheetID,slackRange):
     creds = getToken()
     service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
 
     targetRange = 'Dashboard!B3:I5'
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range=targetRange).execute()
+    result = sheet.values().get(spreadsheetId=sheetID,
+                                range=slackRange).execute()
     values = result.get('values', [])
     
     return values 
 
+def loadSheetsConfig():
+    try:
+        fin = json.load(open("sheetsConfig.json","r"))
+        sheetsConfig["sheetID"] = fin["sheetID"]
+        sheetsConfig["hourlyRange"] = fin["hourlyRange"] if isValidRange(fin["hourlyRange"]) else "" 
+        sheetsConfig["dailyRange"] = fin["dailyRange"] if isValidRange(fin["dailyRange"]) else "" 
+        sheetsConfig["slackRange"] = fin["slackRange"] if isValidRange(fin["slackRange"]) else "" 
+    except Exception as e:
+        logging.error("Failed to load sheets config - %s" % (e))
+        return 
 
-def main(scoreBoard):
-    """Shows basic usage of the Sheets API.
-    Prints values from a sample spreadsheet.
-    """
+def RegularUpdate(scoreBoard, sheetID = None, updateRange = None):
+    if sheetID is None:
+        sheetID = sheetsConfig["sheetID"]
+    if updateRange is None:
+        updateRange = sheetsConfig["hourlyRange"]
+
 
     now = scoreBoard["timestamp"]
     rows = scoreBoard["rows"]
@@ -44,7 +57,7 @@ def main(scoreBoard):
         newRow = []
         newRow.append(now)
         
-        newRow.append(row["teamName"])
+        newRow.append(row["team"])
         newRow.append(row["steps"])
         newObj.append(newRow)
     creds = getToken()
@@ -54,8 +67,8 @@ def main(scoreBoard):
     
 
 
-    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
-                                range=SAMPLE_RANGE_NAME).execute()
+    result = sheet.values().get(spreadsheetId=sheetID,
+                                range=hourlyRange).execute()
     values = result.get('values', [])
 
     
@@ -64,12 +77,14 @@ def main(scoreBoard):
     else:
         startRow = len(values)+1
     
-
-    newRange = "Raw!A%s:C%s" % (startRow,startRow+len(rows))
+    newRanges = splitRange(hourlyRange)
+    newRanges = newRanges[0]
+    newRange = "'%s'!%s%s:%s%s" % (newRanges[0],newRanges[1],startRow,newRanges[2],startRow+len(rows))
+    #newRange = "Raw!A%s:C%s" % (startRow,startRow+len(rows))
     
     body = {"values":newObj}
     
-    result = sheet.values().update(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+    result = sheet.values().update(spreadsheetId=sheetID,
                                     range=newRange,
                                     valueInputOption="USER_ENTERED", body=body).execute()
 
@@ -97,8 +112,13 @@ def getToken(tokenName = "sheets"):
           pickle.dump(creds, token)
   return creds
 
-
-
+def isValidRange(tarRange):
+    return re.match(r"[\S\s]*[A-Za-z]+[0-9]*:[A-Za-z]+[0-9]*",tarRange)
+    
+def splitRange(tarRange):
+    return re.findall(r"'*([\S\s]+)'*!([A-Za-z])[0-9]*:([A-Z]+)[0-9]*",tarRange)
+    
 
 if __name__ == "__main__":
-    getLatestRow()
+    import main
+    main.hourly()

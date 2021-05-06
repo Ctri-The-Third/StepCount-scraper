@@ -58,9 +58,6 @@ def getLeaderBoard():
     leaderBoard = {"timestamp" : datetime.datetime.now().strftime(r"%y-%m-%d %H:%M"), "rows":leaderBoard}
     return leaderBoard    
 
-def addRowToGoogleSheet(leaderBoard):
-    sheetspart.main(leaderBoard)
-
 
 try:
     j = json.load(open("auth.json","r"))
@@ -79,4 +76,7 @@ def hourly():
 def daily():
     getLogin(j["username"],j["password"])
     leaderBoard = getLeaderBoard()
-    sheetspart_daily.main(leaderBoard)
+    sheetspart.loadSheetsConfig()
+    sheetspart.RegularUpdate(leaderBoard,updateRange=sheetspart.sheetsConfig["dailyRange"])
+    
+    
