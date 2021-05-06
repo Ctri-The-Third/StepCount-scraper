@@ -4,3 +4,5 @@ sheets.pickle
 credentials.json
 auth.json
 /__pycache__
+slackConfig.json
+sheetsConfig.json

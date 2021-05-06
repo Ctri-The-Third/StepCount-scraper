@@ -2,7 +2,6 @@ import requests
 import json
 import re
 import sheetspart
-import sheetspart_daily
 import datetime
 from bs4 import BeautifulSoup
 
@@ -58,9 +57,6 @@ def getLeaderBoard():
     leaderBoard = {"timestamp" : datetime.datetime.now().strftime(r"%y-%m-%d %H:%M"), "rows":leaderBoard}
     return leaderBoard    
 
-def addRowToGoogleSheet(leaderBoard):
-    sheetspart.main(leaderBoard)
-
 
 try:
     j = json.load(open("auth.json","r"))
@@ -72,15 +68,15 @@ except Exception as e:
 
 session = requests.Session()
 def hourly():
-
-
-    getLogin(j["username"],j["password"])
-    leaderBoard = getLeaderBoard(session)
-    addRowToGoogleSheet(leaderBoard)
-
-def daily():
-    
-
     getLogin(j["username"],j["password"])
     leaderBoard = getLeaderBoard()
-    sheetspart_daily.main(leaderBoard)
+    sheetspart.loadSheetsConfig()
+    sheetspart.RegularUpdate(leaderBoard)
+
+def daily():
+    getLogin(j["username"],j["password"])
+    leaderBoard = getLeaderBoard()
+    sheetspart.loadSheetsConfig()
+    sheetspart.RegularUpdate(leaderBoard,updateRange=sheetspart.sheetsConfig["dailyRange"])
+    
+    
