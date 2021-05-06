@@ -2,6 +2,7 @@ import requests
 import json
 import re
 import sheetspart
+import sheetspart_daily
 import datetime
 from bs4 import BeautifulSoup
 
@@ -69,7 +70,16 @@ except Exception as e:
 
 
 session = requests.Session()
+def hourly():
 
-getLogin(j["username"],j["password"])
-leaderBoard = getLeaderBoard()
-addRowToGoogleSheet(leaderBoard)
+
+    getLogin(j["username"],j["password"])
+    leaderBoard = getLeaderBoard(session)
+    addRowToGoogleSheet(leaderBoard)
+
+def daily():
+    
+
+    getLogin(j["username"],j["password"])
+    leaderBoard = getLeaderBoard()
+    sheetspart_daily.main(leaderBoard)
