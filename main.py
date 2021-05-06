@@ -2,7 +2,6 @@ import requests
 import json
 import re
 import sheetspart
-import sheetspart_daily
 import datetime
 from bs4 import BeautifulSoup
 

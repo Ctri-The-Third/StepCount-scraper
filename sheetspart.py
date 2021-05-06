@@ -68,7 +68,7 @@ def RegularUpdate(scoreBoard, sheetID = None, updateRange = None):
 
 
     result = sheet.values().get(spreadsheetId=sheetID,
-                                range=hourlyRange).execute()
+                                range=updateRange).execute()
     values = result.get('values', [])
 
     
@@ -77,7 +77,7 @@ def RegularUpdate(scoreBoard, sheetID = None, updateRange = None):
     else:
         startRow = len(values)+1
     
-    newRanges = splitRange(hourlyRange)
+    newRanges = splitRange(updateRange)
     newRanges = newRanges[0]
     newRange = "'%s'!%s%s:%s%s" % (newRanges[0],newRanges[1],startRow,newRanges[2],startRow+len(rows))
     #newRange = "Raw!A%s:C%s" % (startRow,startRow+len(rows))
