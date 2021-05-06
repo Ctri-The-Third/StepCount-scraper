@@ -32,8 +32,10 @@ It should look like this:
 
 In order to provide updates to a channel, the slackAnnounce.py script only needs a [valid webhook](https://api.slack.com/messaging/webhooks) for the channel in question. At present the scripts only supprt a single webhook.
 
-![alt text](https://github.com/Ctri-The-Third/StepCount-scraper/blob/main/Slack-sheetsPreview.PNG?raw=true)
-![alt text](https://github.com/Ctri-The-Third/StepCount-scraper/blob/main/Slack-messagePreview.PNG?raw=true)
+![preview of the sheets layout](https://raw.githubusercontent.com/Ctri-The-Third/StepCount-scraper/main/ReadmeAssets/Slack-sheetsPreview.PNG)
+
+![preview of the slack message](https://raw.githubusercontent.com/Ctri-The-Third/StepCount-scraper/main/ReadmeAssets/Slack-messagePreview.PNG)
+
 
 
 1. Create a JSON file named `slackConfig.json` with the following content
