@@ -71,7 +71,8 @@ session = requests.Session()
 def hourly():
     getLogin(j["username"],j["password"])
     leaderBoard = getLeaderBoard()
-    addRowToGoogleSheet(leaderBoard)
+    sheetspart.loadSheetsConfig()
+    sheetspart.RegularUpdate(leaderBoard)
 
 def daily():
     getLogin(j["username"],j["password"])
