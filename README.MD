@@ -27,3 +27,20 @@ It should look like this:
   }
 }
 ```
+4. Configure a scheduler to run the `runmeHourly.py` and `runmeDaily.py` files
+# Slack
+
+In order to provide updates to a channel, the slackAnnounce.py script only needs a [valid webhook](https://api.slack.com/messaging/webhooks) for the channel in question. At present the scripts only supprt a single webhook.
+
+![alt text](https://github.com/Ctri-The-Third/StepCount-scraper/blob/main/Slack-sheetsPreview.PNG?raw=true)
+![alt text](https://github.com/Ctri-The-Third/StepCount-scraper/blob/main/Slack-messagePreview.PNG?raw=true)
+
+
+1. Create a JSON file named `slackConfig.json` with the following content
+```json
+{
+	"secretWebhook":"https://hooks.slack.com/services/[ALPHANUMERIC]/[ALPHANUMERIC]/[LONG ALPHANUMERIC]"
+}
+```
+
+2. configure a scheduler to run the `slackAnnounce.py` script.
