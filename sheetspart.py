@@ -17,6 +17,20 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SAMPLE_SPREADSHEET_ID = '1kJaivNZ3NrtIfLcRV8-KjzGSBRsT9v9ThcnY_7H12DY'
 SAMPLE_RANGE_NAME = 'Raw!A:A'
 
+
+def getLatestRow():
+    creds = getToken()
+    service = build('sheets', 'v4', credentials=creds)
+    sheet = service.spreadsheets()
+
+    targetRange = 'Dashboard!B3:I5'
+    result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
+                                range=targetRange).execute()
+    values = result.get('values', [])
+    
+    return values 
+
+
 def main(scoreBoard):
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
@@ -30,14 +44,14 @@ def main(scoreBoard):
         newRow = []
         newRow.append(now)
         
-        newRow.append(row["team"])
+        newRow.append(row["teamName"])
         newRow.append(row["steps"])
         newObj.append(newRow)
     creds = getToken()
     service = build('sheets', 'v4', credentials=creds)
-
-    # Call the Sheets API
     sheet = service.spreadsheets()
+    # Call the Sheets API
+    
 
 
     result = sheet.values().get(spreadsheetId=SAMPLE_SPREADSHEET_ID,
@@ -84,14 +98,7 @@ def getToken(tokenName = "sheets"):
   return creds
 
 
-if __name__ == '__main__':
-    scoreBoard = {"timestamp":"2021-01-01 15:00"
-    , "rows":[
-        {"teamName":"name1", "steps":1111},
-        {"teamName":"name2", "steps":2222},
-        {"teamName":"name3", "steps":3333},
-        {"teamName":"name4", "steps":4444},
-        {"teamName":"name5", "steps":5555},
-        {"teamName":"name6", "steps":6666}
-    ]}
-    main(scoreBoard)
+
+
+if __name__ == "__main__":
+    getLatestRow()

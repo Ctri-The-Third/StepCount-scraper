@@ -72,15 +72,11 @@ except Exception as e:
 
 session = requests.Session()
 def hourly():
-
-
     getLogin(j["username"],j["password"])
-    leaderBoard = getLeaderBoard(session)
+    leaderBoard = getLeaderBoard()
     addRowToGoogleSheet(leaderBoard)
 
 def daily():
-    
-
     getLogin(j["username"],j["password"])
     leaderBoard = getLeaderBoard()
     sheetspart_daily.main(leaderBoard)
