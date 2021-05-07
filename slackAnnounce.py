@@ -21,8 +21,8 @@ def getWebhook():
 
 
 
-def prepareMessage ():
-    values = sheetspart.getLatestRow()
+def prepareMessage (sheetID,slackRange):
+    values = sheetspart.getLatestRow(sheetID,slackRange)
     names = values[0]
     growth = values[1]
     totals = values[2]
@@ -64,5 +64,6 @@ def sortTeams(teams):
     return teams
 
 if __name__ == "__main__":
-    message = prepareMessage()
+    config = json.load(open("sheetsConfig.json","r"))
+    message = prepareMessage(config["sheetID"],config["slackRange"])
     postToSlack(message)

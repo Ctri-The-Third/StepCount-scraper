@@ -27,8 +27,8 @@ It should look like this:
   }
 }
 ```
-=======
-```
+
+
 4. Configure a scheduler to run the `runmeHourly.py` and `runmeDaily.py` files
 # Slack
 
@@ -47,5 +47,5 @@ In order to provide updates to a channel, the slackAnnounce.py script only needs
 }
 ```
 
-2. configure a scheduler to run the `slackAnnounce.py` script.
+2. configure a scheduler to run the `runmeDaily.py` script, which includes attempting to announce to slack.
 
