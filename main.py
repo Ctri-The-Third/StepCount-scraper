@@ -3,6 +3,7 @@ import json
 import re
 import sheetspart
 import datetime
+import slackAnnounce
 from bs4 import BeautifulSoup
 
 
@@ -78,5 +79,8 @@ def daily():
     leaderBoard = getLeaderBoard()
     sheetspart.loadSheetsConfig()
     sheetspart.RegularUpdate(leaderBoard,updateRange=sheetspart.sheetsConfig["dailyRange"])
+    config = json.load(open("sheetsConfig.json","r"))
+    message = slackAnnounce.prepareMessage(config["sheetID"],config["slackRange"])
+    slackAnnounce.postToSlack(message)
     
     
