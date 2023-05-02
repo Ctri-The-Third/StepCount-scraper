@@ -9,11 +9,11 @@ This is a scraper designed to automatically get your workplace rankings from htt
 ```json 
 {
 	"username":"email@domain.com",
-	"password":"supersafepassword123"
+	"password":"supersafepassword123",
 }
 ```
 
-3. download a client json file from https://console.cloud.google.com/apis/credentials. Your goal is readwrite access to your own spreadsheets. rename the file to `credentials.json` in the main directory.  
+3. download a client json file from https://console.cloud.google.com/apis/credentials. Your goal is readwrite access to your own spreadsheets. rename the file to `credentials.json` in the main directory.  You'll need to have enabled the Google Sheets API for the project you're using.
 It should look like this:
 ```json
 {
@@ -32,18 +32,20 @@ It should look like this:
 4. Configure a scheduler to run the `runmeHourly.py` and `runmeDaily.py` files
 # Slack
 
-In order to provide updates to a channel, the slackAnnounce.py script only needs a [valid webhook](https://api.slack.com/messaging/webhooks) for the channel in question. At present the scripts only supprt a single webhook.
+In order to provide updates to a channel, the slackAnnounce.py script requires a token with `chat:write`, and for the created app to be added to a given channel.
 
 ![preview of the sheets layout](https://raw.githubusercontent.com/Ctri-The-Third/StepCount-scraper/main/ReadmeAssets/Slack-sheetsPreview.PNG)
 
 ![preview of the slack message](https://raw.githubusercontent.com/Ctri-The-Third/StepCount-scraper/main/ReadmeAssets/Slack-messagePreview.PNG)
 
+Ensure the slack token and slack channel identifier are added to the auth.json. The final thing will look like the following:
 
-
-1. Create a JSON file named `slackConfig.json` with the following content
 ```json
 {
-	"secretWebhook":"https://hooks.slack.com/services/[ALPHANUMERIC]/[ALPHANUMERIC]/[LONG ALPHANUMERIC]"
+  "username":"email@domain.com",
+  "password":"supersafepassword123",
+  "slacktoken":"xoxb-1234567890-1234567890-aLpHaNuMeRiC",
+  "slackchannel": "C0ALPHANUMERIC"
 }
 ```
 

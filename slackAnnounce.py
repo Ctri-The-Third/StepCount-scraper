@@ -1,23 +1,8 @@
 import requests 
 import json
 import sheetspart
-
-def postToSlack (text):
-
-
-    url = getWebhook()
-    headers = {"Content-type":"application/json"}
-    body = {"text":text}
-    r = requests.post(url = url, headers = headers,data=json.dumps(body))
-    print(r)
-    print(r.content)
-
-def getWebhook():
-    try:
-        conf = json.load(open("slackConfig.json"))
-        return conf["secretWebhook"]
-    except Exception as e:
-        return "" 
+from serviceHelpers.slack import slack
+import openai
 
 
 
@@ -63,7 +48,21 @@ def sortTeams(teams):
                 pass
     return teams
 
-if __name__ == "__main__":
-    config = json.load(open("sheetsConfig.json","r"))
-    message = prepareMessage(config["sheetID"],config["slackRange"])
-    postToSlack(message)
+def add_motivation(message:str, open_ai_token:str) -> str:
+    "feeds the current slack table into open and gets a short motivation & celebration for the winning / losing teams"
+
+    openai.api_key = open_ai_token
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role":"user",
+             "content":f"{message} \n\n The above is being posted to a company step challenge. Without repeating the rankings or step counts, give a short consolidated celebration paragraph for the top 3, and an encouraging note for the team that increased by the least"
+            }],
+        temperature=0.7,
+        max_tokens=150,
+        frequency_penalty=0.5,
+        presence_penalty=0,
+        top_p=1.0
+    )
+    response_content = response["choices"][0]["message"]["content"]
+    return f"{message}\n\n{response_content}"

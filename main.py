@@ -5,7 +5,7 @@ import sheetspart
 import datetime
 import slackAnnounce
 from bs4 import BeautifulSoup
-
+from serviceHelpers.slack import slack
 
 
  
@@ -39,8 +39,8 @@ def getLeaderBoard():
         
 
         rawName = entry.find(name="span", class_="lb_name").text
-        if rawName[-16:] == "Unity | Game Ops":
-            rawName = rawName[0:-16]
+        if rawName[-5:] == "Unity":
+            rawName = rawName[0:-5]
             rawName = re.sub(r" \([0-9]*.{2}\)","",rawName)
 
         rawSteps = entry.find(name="div", class_="lead_bd3").text
@@ -81,6 +81,9 @@ def daily():
     sheetspart.RegularUpdate(leaderBoard,updateRange=sheetspart.sheetsConfig["dailyRange"])
     config = json.load(open("sheetsConfig.json","r"))
     message = slackAnnounce.prepareMessage(config["sheetID"],config["slackRange"])
-    slackAnnounce.postToSlack(message)
     
+    open_ai_token = j.get("openAItoken")
+    if open_ai_token is not None:
+        message   = slackAnnounce.add_motivation(message, open_ai_token)
+    slack(j.get("slacktoken")).post_to_slack_via_token(message,j.get("slackchannel"))
     
